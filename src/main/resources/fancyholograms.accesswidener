@@ -1,0 +1,20 @@
+accessWidener	v1	named
+accessible method net/minecraft/world/entity/Display$TextDisplay getFlags ()B
+accessible method net/minecraft/world/entity/Display$TextDisplay setFlags (B)V
+
+accessible field net/minecraft/world/entity/Display DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/Display DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+
+accessible field net/minecraft/world/entity/Display$TextDisplay DATA_LINE_WIDTH_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/Display$TextDisplay DATA_BACKGROUND_COLOR_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+
+accessible method net/minecraft/world/entity/Display setBillboardConstraints (Lnet/minecraft/world/entity/Display$BillboardConstraints;)V
+accessible method net/minecraft/world/entity/Display setBrightnessOverride (Lnet/minecraft/util/Brightness;)V
+accessible method net/minecraft/world/entity/Display$BlockDisplay setBlockState (Lnet/minecraft/world/level/block/state/BlockState;)V
+accessible method net/minecraft/world/entity/Display$ItemDisplay setItemStack (Lnet/minecraft/world/item/ItemStack;)V
+accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
+accessible method net/minecraft/world/entity/Display setShadowRadius (F)V
+accessible method net/minecraft/world/entity/Display setShadowStrength (F)V
+accessible method net/minecraft/world/entity/Display setViewRange (F)V
+
+accessible method net/minecraft/world/entity/Display$TextDisplay setText (Lnet/minecraft/network/chat/Component;)V

@@ -1,26 +1,28 @@
 package de.oliver.fancyholograms.listeners;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.event.world.WorldUnloadEvent;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 
-public class WorldListener implements Listener {
+public class WorldListener {
 
-    @EventHandler
-    public void onWorldLoad(WorldLoadEvent event) {
+    public static void init() {
+        ServerWorldEvents.LOAD.register(WorldListener::onWorldLoad);
+        ServerWorldEvents.UNLOAD.register(WorldListener::onWorldUnload);
+    }
+
+    private static void onWorldLoad(MinecraftServer var1, ServerLevel var2) {
         FancyHolograms.get().getHologramThread().submit(() -> {
-            FancyHolograms.get().getFancyLogger().info("Loading holograms for world " + event.getWorld().getName());
-            FancyHolograms.get().getHologramsManager().loadHolograms(event.getWorld().getName());
+            FancyHolograms.get().getFancyLogger().info("Loading holograms for world " + var2.dimension().location());
+            FancyHolograms.get().getHologramsManager().loadHolograms(var2.dimension().location().toString());
         });
     }
 
-    @EventHandler
-    public void onWorldUnload(WorldUnloadEvent event) {
+    private static void onWorldUnload(MinecraftServer var1, ServerLevel level) {
         FancyHolograms.get().getHologramThread().submit(() -> {
-            FancyHolograms.get().getFancyLogger().info("Unloading holograms for world " + event.getWorld().getName());
-            FancyHolograms.get().getHologramsManager().unloadHolograms(event.getWorld().getName());
+            FancyHolograms.get().getFancyLogger().info("Unloading holograms for world " + level.dimension().location());
+            FancyHolograms.get().getHologramsManager().unloadHolograms(level.dimension().location().toString());
         });
     }
 

@@ -6,6 +6,7 @@ import de.oliver.fancyholograms.api.events.HologramDeleteEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
+import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,14 +21,14 @@ public class RemoveCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+    public boolean run(@NotNull ServerPlayer player, @Nullable Hologram hologram, @NotNull String[] args) {
 
         if (!(player.hasPermission("fancyholograms.hologram.remove"))) {
             MessageHelper.error(player, "You don't have the required permission to remove a hologram");
             return false;
         }
 
-        if (!new HologramDeleteEvent(hologram, player).callEvent()) {
+        if (!HologramDeleteEvent.EVENT.invoker().onEvent(hologram, player)) {
             MessageHelper.error(player, "Removing the hologram was cancelled");
             return false;
         }

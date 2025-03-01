@@ -3,10 +3,10 @@ package de.oliver.fancyholograms.commands.hologram;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
-import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.events.HologramCreateEvent;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
+import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Display;
@@ -31,7 +31,7 @@ public class CreateCMD implements Subcommand {
             return false;
         }
 
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof ServerPlayer player)) {
             MessageHelper.error(sender, "You must be a sender to use this command");
             return false;
         }
@@ -72,7 +72,7 @@ public class CreateCMD implements Subcommand {
         }
 
         final var holo = FancyHolograms.get().getHologramsManager().create(displayData);
-        if (!new HologramCreateEvent(holo, player).callEvent()) {
+        if (!HologramCreateEvent.EVENT.invoker().onEvent(hologram, player)) {
             MessageHelper.error(player, "Creating the hologram was cancelled");
             return false;
         }

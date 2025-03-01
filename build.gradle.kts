@@ -1,43 +1,55 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
-import net.minecrell.pluginyml.paper.PaperPluginDescription
+//import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+//import net.minecrell.pluginyml.paper.PaperPluginDescription
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 plugins {
     id("java-library")
     id("maven-publish")
+    id("fabric-loom") version "1.10-SNAPSHOT"
 
-    id("xyz.jpenilla.run-paper") version "2.3.1"
-    id("com.gradleup.shadow") version "8.3.6"
-    id("net.minecrell.plugin-yml.paper") version "0.6.0"
-    id("io.papermc.hangar-publish-plugin") version "0.1.2"
-    id("com.modrinth.minotaur") version "2.+"
+//    id("xyz.jpenilla.run-paper") version "2.3.1"
+//    id("com.gradleup.shadow") version "8.3.6"
+//    id("net.minecrell.plugin-yml.paper") version "0.6.0"
+//    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+//    id("com.modrinth.minotaur") version "2.+"
 }
 
-runPaper.folia.registerTask()
+//runPaper.folia.registerTask()
 
-val supportedVersions =
-    listOf(
-        "1.19.4",
-        "1.20",
-        "1.20.1",
-        "1.20.2",
-        "1.20.3",
-        "1.20.4",
-        "1.20.5",
-        "1.20.6",
-        "1.21",
-        "1.21.1",
-        "1.21.2",
-        "1.21.3",
-        "1.21.4",
-    )
+//val supportedVersions =
+//    listOf(
+//        "1.19.4",
+//        "1.20",
+//        "1.20.1",
+//        "1.20.2",
+//        "1.20.3",
+//        "1.20.4",
+//        "1.20.5",
+//        "1.20.6",
+//        "1.21",
+//        "1.21.1",
+//        "1.21.2",
+//        "1.21.3",
+//        "1.21.4",
+//    )
+
+repositories {
+    mavenCentral()
+}
+
+loom {
+    accessWidenerPath.set(file("src/main/resources/fancyholograms.accesswidener"))
+}
 
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
     version = "2.4.2" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast hologram plugin using display entities"
+
+    apply(plugin = "java-library")
+    apply(plugin = "fabric-loom")
 
     repositories {
         mavenLocal()
@@ -55,105 +67,101 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    minecraft("net.minecraft:minecraft:1.21.1")
+    mappings(loom.officialMojangMappings())
+    modImplementation("net.fabricmc:fabric-loader:0.16.5")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.109.0+1.21.1")
 
-    implementation(project(":api"))
-    implementation(project(":implementation_1_20_4", configuration = "reobf"))
-    implementation(project(":implementation_1_20_2", configuration = "reobf"))
-    implementation(project(":implementation_1_20_1", configuration = "reobf"))
-    implementation(project(":implementation_1_19_4", configuration = "reobf"))
+    modImplementation("net.kyori:adventure-platform-fabric:5.14.1")
+    include("net.kyori:adventure-platform-fabric:5.14.1")
 
-    implementation("de.oliver:FancyLib:35")
-    implementation("de.oliver:FancySitula:0.0.13")
-    implementation("de.oliver.FancyAnalytics:api:0.1.6")
-    implementation("de.oliver.FancyAnalytics:logger:0.0.6")
+    modImplementation("org.spongepowered:configurate-yaml:4.2.0")
 
-    compileOnly("de.oliver:FancyNpcs:2.4.2")
-    compileOnly("org.lushplugins:ChatColorHandler:5.1.2")
-    compileOnly("org.geysermc.floodgate:api:2.2.3-SNAPSHOT")
+    include("me.lucko:fabric-permissions-api:0.3.1")
+    modImplementation("me.lucko:fabric-permissions-api:0.3.1")
 }
 
-paper {
-    main = "de.oliver.fancyholograms.FancyHolograms"
-    bootstrapper = "de.oliver.fancyholograms.loaders.FancyHologramsBootstrapper"
-    loader = "de.oliver.fancyholograms.loaders.FancyHologramsLoader"
-    foliaSupported = true
-    version = rootProject.version.toString()
-    description = "Simple, lightweight and fast hologram plugin using display entities"
-    apiVersion = "1.19"
-    load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
-    serverDependencies {
-        register("FancyNpcs") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-        }
-        register("MiniPlaceholders") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-        }
-        register("PlaceholderAPI") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-        }
-        register("floodgate") {
-            required = false
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-            joinClasspath = true
-        }
-    }
-}
+//paper {
+//    main = "de.oliver.fancyholograms.FancyHolograms"
+//    bootstrapper = "de.oliver.fancyholograms.loaders.FancyHologramsBootstrapper"
+//    loader = "de.oliver.fancyholograms.loaders.FancyHologramsLoader"
+//    foliaSupported = true
+//    version = rootProject.version.toString()
+//    description = "Simple, lightweight and fast hologram plugin using display entities"
+//    apiVersion = "1.19"
+//    load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
+//    serverDependencies {
+//        register("FancyNpcs") {
+//            required = false
+//            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+//        }
+//        register("MiniPlaceholders") {
+//            required = false
+//            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+//        }
+//        register("PlaceholderAPI") {
+//            required = false
+//            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+//        }
+//        register("floodgate") {
+//            required = false
+//            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+//            joinClasspath = true
+//        }
+//    }
+//}
 
 tasks {
-    runServer {
-        minecraftVersion("1.21.4")
+//    runServer {
+//        minecraftVersion("1.21.4")
+//
+//        downloadPlugins {
+//            modrinth("fancynpcs", "2.4.0")
+//            hangar("ViaVersion", "5.2.0")
+//            hangar("ViaBackwards", "5.2.0")
+////            modrinth("multiverse-core", "4.3.11")
+//            hangar("PlaceholderAPI", "2.11.6")
+////            modrinth("DecentHolograms", "2.8.12")
+//        }
+//    }
 
-        downloadPlugins {
-            modrinth("fancynpcs", "2.4.0")
-            hangar("ViaVersion", "5.2.0")
-            hangar("ViaBackwards", "5.2.0")
-//            modrinth("multiverse-core", "4.3.11")
-            hangar("PlaceholderAPI", "2.11.6")
-//            modrinth("DecentHolograms", "2.8.12")
-        }
-    }
+//    shadowJar {
+//        archiveClassifier.set("")
+//
+//        dependsOn(":api:shadowJar")
+//    }
 
-    shadowJar {
-        archiveClassifier.set("")
-
-        dependsOn(":api:shadowJar")
-    }
-
-    publishing {
-        repositories {
-            maven {
-                name = "fancypluginsReleases"
-                url = uri("https://repo.fancyplugins.de/releases")
-                credentials(PasswordCredentials::class)
-                authentication {
-                    isAllowInsecureProtocol = true
-                    create<BasicAuthentication>("basic")
-                }
-            }
-
-            maven {
-                name = "fancypluginsSnapshots"
-                url = uri("https://repo.fancyplugins.de/snapshots")
-                credentials(PasswordCredentials::class)
-                authentication {
-                    isAllowInsecureProtocol = true
-                    create<BasicAuthentication>("basic")
-                }
-            }
-        }
-        publications {
-            create<MavenPublication>("maven") {
-                groupId = project.group.toString()
-                artifactId = project.name
-                version = project.version.toString()
-                from(project.components["java"])
-            }
-        }
-    }
+//    publishing {
+//        repositories {
+//            maven {
+//                name = "fancypluginsReleases"
+//                url = uri("https://repo.fancyplugins.de/releases")
+//                credentials(PasswordCredentials::class)
+//                authentication {
+//                    isAllowInsecureProtocol = true
+//                    create<BasicAuthentication>("basic")
+//                }
+//            }
+//
+//            maven {
+//                name = "fancypluginsSnapshots"
+//                url = uri("https://repo.fancyplugins.de/snapshots")
+//                credentials(PasswordCredentials::class)
+//                authentication {
+//                    isAllowInsecureProtocol = true
+//                    create<BasicAuthentication>("basic")
+//                }
+//            }
+//        }
+//        publications {
+//            create<MavenPublication>("maven") {
+//                groupId = project.group.toString()
+//                artifactId = project.name
+//                version = project.version.toString()
+//                from(project.components["java"])
+//            }
+//        }
+//    }
 
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
@@ -178,23 +186,23 @@ tasks {
 
         inputs.properties(props)
 
-        filesMatching("paper-plugin.yml") {
-            expand(props)
-        }
-
-        filesMatching("version.yml") {
-            expand(props)
-        }
+//        filesMatching("paper-plugin.yml") {
+//            expand(props)
+//        }
+//
+//        filesMatching("version.yml") {
+//            expand(props)
+//        }
     }
 }
 
-tasks.publishAllPublicationsToHangar {
-    dependsOn("shadowJar")
-}
-
-tasks.modrinth {
-    dependsOn("shadowJar")
-}
+//tasks.publishAllPublicationsToHangar {
+//    dependsOn("shadowJar")
+//}
+//
+//tasks.modrinth {
+//    dependsOn("shadowJar")
+//}
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
@@ -226,33 +234,33 @@ fun getLastCommitMessage(): String {
     }
 }
 
-hangarPublish {
-    publications.register("plugin") {
-        version = project.version as String
-        id = "FancyHolograms"
-        channel = "Alpha"
-
-        apiKey.set(System.getenv("HANGAR_PUBLISH_API_TOKEN"))
-
-        platforms {
-            paper {
-                jar = tasks.shadowJar.flatMap { it.archiveFile }
-                platformVersions = supportedVersions
-            }
-        }
-
-        changelog = getLastCommitMessage()
-    }
-}
-
-modrinth {
-    token.set(System.getenv("MODRINTH_PUBLISH_API_TOKEN"))
-    projectId.set("fancyholograms")
-    versionNumber.set(project.version.toString())
-    versionType.set("alpha")
-    uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
-    gameVersions.addAll(supportedVersions)
-    loaders.add("paper")
-    loaders.add("folia")
-    changelog.set(getLastCommitMessage())
-}
+//hangarPublish {
+//    publications.register("plugin") {
+//        version = project.version as String
+//        id = "FancyHolograms"
+//        channel = "Alpha"
+//
+//        apiKey.set(System.getenv("HANGAR_PUBLISH_API_TOKEN"))
+//
+//        platforms {
+//            paper {
+//                jar = tasks.shadowJar.flatMap { it.archiveFile }
+//                platformVersions = supportedVersions
+//            }
+//        }
+//
+//        changelog = getLastCommitMessage()
+//    }
+//}
+//
+//modrinth {
+//    token.set(System.getenv("MODRINTH_PUBLISH_API_TOKEN"))
+//    projectId.set("fancyholograms")
+//    versionNumber.set(project.version.toString())
+//    versionType.set("alpha")
+//    uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
+//    gameVersions.addAll(supportedVersions)
+//    loaders.add("paper")
+//    loaders.add("folia")
+//    changelog.set(getLastCommitMessage())
+//}

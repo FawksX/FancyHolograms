@@ -1,11 +1,6 @@
 package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.data.HologramData;
-import de.oliver.fancyholograms.api.hologram.Hologram;
-import de.oliver.fancyholograms.storage.converter.ConverterTarget;
-import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
-import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.translations.message.Message;
@@ -14,8 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public final class FancyHologramsCMD extends Command {
 
@@ -56,45 +49,6 @@ public final class FancyHologramsCMD extends Command {
                     FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
                 });
             }
-            case "convert" -> {
-                if (args.length < 3) {
-                    MessageHelper.info(sender, "Usage: /fancyholograms convert <type> <targets> [args...]");
-                    return false;
-                }
-
-                final String converterId = args[1];
-                FHConversionRegistry.getConverterById(converterId)
-                    .ifPresentOrElse((converter) -> {
-                        final String[] converterArgs = Arrays.asList(args)
-                            .subList(2, args.length)
-                            .toArray(String[]::new);
-
-                        final ConverterTarget target = ConverterTarget.ofStringNullable(args[2]);
-
-                        if (target == null) {
-                            MessageHelper.error(sender, "Invalid regex for your conversion target!");
-                            return;
-                        }
-
-                        final HologramConversionSession session = new HologramConversionSession(target, sender, converterArgs);
-
-                        try {
-                            final List<HologramData> holograms = converter.convert(session);
-
-                            for (final HologramData data : holograms) {
-                                final Hologram hologram = this.plugin.getHologramsManager().create(data);
-                                this.plugin.getHologramsManager().addHologram(hologram);
-                            }
-
-                            this.plugin.getHologramsManager().saveHolograms();
-                            // TODO(matt): Give options to delete them or teleport and a list of IDs please
-
-                            MessageHelper.success(sender, String.format("Converted successfully, produced %s total holograms!", holograms.size()));
-                        } catch (Exception error) {
-                            MessageHelper.error(sender, error.getMessage());
-                        }
-                    }, () -> MessageHelper.error(sender, "That converter is not registered. Look at the developer documentation if you are adding converters."));
-            }
             default -> {
                 MessageHelper.info(sender, Constants.FH_COMMAND_USAGE);
                 return false;
@@ -115,19 +69,6 @@ public final class FancyHologramsCMD extends Command {
         if (args.length == 1) {
             suggestions.addAll(Arrays.asList("version", "reload", "save", "convert"));
         } else {
-            if (Objects.equals(args[0], "convert")) {
-
-                if (args.length == 2) {
-                    suggestions.addAll(FHConversionRegistry.getAllUsableConverterIds());
-                } else if (args.length == 3) {
-                    final String converterId = args[1];
-                    FHConversionRegistry.getConverterById(converterId)
-                        .ifPresent((converter) -> {
-                            suggestions.addAll(converter.getConvertableHolograms());
-                            suggestions.add("*");
-                        });
-                }
-            }
         }
 
         String lastArgument = args[args.length - 1];

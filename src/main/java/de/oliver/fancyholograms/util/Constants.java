@@ -1,7 +1,5 @@
 package de.oliver.fancyholograms.util;
 
-import de.oliver.fancylib.MessageHelper;
-
 import java.text.DecimalFormat;
 
 public enum Constants {
@@ -40,12 +38,12 @@ public enum Constants {
             <%primary_color%>- /hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram
             <%primary_color%>- /hologram edit <hologram> brightness <block|sky> <0-15> <dark_gray>- <white>Changes the brightness of the hologram
             <%primary_color%>- /hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text
-            """.replace("%primary_color%", MessageHelper.getPrimaryColor());
+            """.replace("%primary_color%", "#8ec3cf");
 
     public static final String HELP_TEXT_NPCS = """
             <%primary_color%>- /hologram edit <hologram> linkWithNpc <npc name> <dark_gray>- <white>Links the hologram with an NPC
             <%primary_color%>- /hologram edit <hologram> unlinkWithNpc <dark_gray>- <white>Unlinks the hologram with an NPC
-            """.replace("%primary_color%", MessageHelper.getPrimaryColor());
+            """.replace("%primary_color%", "#8ec3cf");
 
     public static final String INVALID_NEARBY_RANGE = "Provide an integer radius to search for holograms nearby.";
 

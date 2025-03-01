@@ -10,7 +10,6 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.commands.hologram.*;
 import de.oliver.fancyholograms.util.Constants;
-import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -40,7 +39,7 @@ public final class HologramCMD extends Command {
     }
 
     public static boolean callModificationEvent(@NotNull final Hologram hologram, @NotNull final CommandSender player, @NotNull final HologramData updatedData, @NotNull final HologramUpdateEvent.HologramModification modification) {
-        final var result = new HologramUpdateEvent(hologram, player, updatedData, modification).callEvent();
+        final var result = HologramUpdateEvent.EVENT.invoker().onEvent(hologram, player, updatedData, modification);
 
         if (!result) {
             MessageHelper.error(player, "Cancelled hologram modification");
@@ -56,7 +55,7 @@ public final class HologramCMD extends Command {
         }
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-            MessageHelper.info(sender, Constants.HELP_TEXT + (!PluginUtils.isFancyNpcsEnabled() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
+            MessageHelper.info(sender, Constants.HELP_TEXT);
             return false;
         }
 
@@ -154,9 +153,7 @@ public final class HologramCMD extends Command {
                 return Collections.emptyList();
             }
 
-            final var usingNpcs = PluginUtils.isFancyNpcsEnabled();
-
-            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "translate", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", "brightness", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
+            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "translate", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", "brightness"));
             suggestions.addAll(type.getCommands());
 
             return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT))).toList();
@@ -209,13 +206,6 @@ public final class HologramCMD extends Command {
                 case "setline", "removeline" -> {
                     TextHologramData textData = (TextHologramData) hologram.getData();
                     yield IntStream.range(1, textData.getText().size() + 1).mapToObj(Integer::toString);
-                }
-                case "linkwithnpc" -> {
-                    if (!PluginUtils.isFancyNpcsEnabled()) {
-                        yield Stream.<String>empty();
-                    }
-
-                    yield FancyNpcsPlugin.get().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
                 case "block" -> Arrays.stream(Material.values()).filter(Material::isBlock).map(Enum::name);
                 case "seethrough" -> Stream.of("true", "false");

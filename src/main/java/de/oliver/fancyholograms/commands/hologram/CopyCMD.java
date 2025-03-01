@@ -5,6 +5,7 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.events.HologramCreateEvent;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
+import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -28,7 +29,7 @@ public class CopyCMD implements Subcommand {
             return false;
         }
 
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof ServerPlayer player)) {
             MessageHelper.error(sender, "You must be a sender to use this command");
             return false;
         }
@@ -60,7 +61,9 @@ public class CopyCMD implements Subcommand {
 
         final var copy = FancyHolograms.get().getHologramsManager().create(data);
 
-        if (!new HologramCreateEvent(copy, player).callEvent()) {
+
+
+        if (!HologramCreateEvent.EVENT.invoker().onEvent(hologram, player)) {
             MessageHelper.error(sender, "Creating the copied hologram was cancelled");
             return false;
         }

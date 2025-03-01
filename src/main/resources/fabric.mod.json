@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "fancyholograms",
+  "version": "${version}",
+  "name": "fancyholograms",
+  "description": "A port of FancyHolograms to Fabric",
+  "authors": [
+    "OliverSchlueter",
+    "FawksX"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {},
+  "depends": {
+    "fabricloader": ">=0.9.0",
+    "fabric-api-base": "*"
+  },
+  "accessWidener": "fancyholograms.accesswidener"
+}
